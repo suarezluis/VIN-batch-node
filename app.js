@@ -4,14 +4,26 @@ const axios = require("axios");
 
 var rawVINs = [];
 var VINcount = 0;
+var errorCount = 0;
 var fieldCount = 0;
 
-fs.readFile("raw_vins.csv", "utf8", function(err, contents) {
+fs.readFile("vin_sample_extract.csv", "utf8", function(err, contents) {
   // separate values by commas
   rawVINs = contents.split("\n");
 
   rawVINs.forEach(vin => {
-    axios
+  
+  
+     getNHTSA(vin)  
+  
+  
+  });
+});
+
+
+async function getNHTSA(vin) {
+  
+  await axios
       .get(
         `https://vpic.nhtsa.dot.gov/api/vehicles/decodevinextended/${vin}?format=json`
       )
@@ -24,7 +36,8 @@ fs.readFile("raw_vins.csv", "utf8", function(err, contents) {
             JSONdata[vin][item.Variable] = item.Value;
             fieldCount++;
             console.clear();
-            console.log("VINs added", VINcount);
+            console.log("VINs added:", VINcount);
+            console.log("Errors:", errorCount);
             console.log("Fields added:", fieldCount);
             console.log("VIN:", vin);
             console.log("Last field added:", item.Variable);
@@ -40,7 +53,6 @@ fs.readFile("raw_vins.csv", "utf8", function(err, contents) {
         }
       })
       .catch(function(error) {
-        console.log(error);
+        errorCount++;
       });
-  });
-});
+}
