@@ -63,3 +63,4 @@ typings/
 
 # proteting customer data
 *.csv
+*.xlsx
