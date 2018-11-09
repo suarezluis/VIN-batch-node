@@ -62,4 +62,4 @@ typings/
 .next
 
 # proteting customer data
-.csv
+*.csv
